@@ -21,6 +21,41 @@ class node:
         elif(data  < parent.data):
             parent.left=node(data)
     def delete(self,key):
+        temp:node=self
+        parent:node=temp
+        while(temp.data!=key):
+            if(temp==None):
+                print("node not found")
+                return -1
+            elif(key>temp.data):
+                parent=temp
+                temp=temp.right
+            elif(key<temp.data):
+                parent=temp
+                temp=temp.left
+        if(temp.left==None):
+            if(temp==parent.right):
+                parent.right=temp.right
+            elif(temp==parent.left):
+                parent.left=temp.right
+        elif(temp.right==None):
+            if(temp==parent.right):
+                parent.right=temp.left
+            else:
+                parent.left=temp.left
+        else:
+            #find lowest number from the right sub tree
+            temp2:node=temp.right
+            parent2:node=temp
+            while(temp2.left!=None):
+                parent2=temp2
+                temp2=temp2.left
+            temp.data=temp2.data
+            if(temp2==parent2.left):
+                parent2.left=None
+            elif(temp2==parent2.right):
+                parent2.right=None
+
         ...
     def preorder(self,root):
         temp:node=root
@@ -47,16 +82,39 @@ class node:
         print(f"{temp.data}",end=", ")
         
 
-root=node(10)
-root.insert(20)
-root.insert(2)
-root.insert(0)
-root.inorder(root)
-print("")
-root.postorder(root)
-print("")
-root.preorder(root)
-print("")
+root_node=None
+set_appearance_mode("dark")
+root=CTk()
+root.geometry("800x500")
+root.title("Tree Visualiser")
 
+buttons_frame=CTkFrame(root,corner_radius=1,border_color="black",border_width=1)
+buttons_frame.pack(side=LEFT,fill="y",padx=0,pady=0)
+
+label=CTkLabel(buttons_frame,text="What would you like to do")
+label.pack(padx=10,pady=1)
+
+
+buttons_grid=CTkFrame(buttons_frame,border_width=0,fg_color="transparent")
+buttons_grid.pack(padx=10,pady=10)
+
+insert_entry=CTkEntry(buttons_grid,placeholder_text="value to be inserted",corner_radius=1,border_color="black",border_width=0,width=150)
+insert_entry.grid(padx=0,pady=10,row=0,column=0)
+
+def insert_callback():
+    pass
+insert_btn=CTkButton(buttons_grid,width=50,text="Insert",corner_radius=1,command=insert_callback)
+insert_btn.grid(padx=0,pady=10,row=0,column=1)
+
+delete_entry=CTkEntry(buttons_grid,placeholder_text="value to be deleted",corner_radius=1,border_color="black",border_width=0,width=150)
+delete_entry.grid(padx=0,pady=10,row=1,column=0)
+
+def delete_callback():
+    pass
+delete_btn=CTkButton(buttons_grid,width=50,text="Delete",corner_radius=1,command=delete_callback)
+delete_btn.grid(padx=0,pady=10,row=1,column=1)
+
+
+root.mainloop()
 
 
