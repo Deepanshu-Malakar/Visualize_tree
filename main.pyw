@@ -115,6 +115,7 @@ delete_btn=CTkButton(buttons_grid,width=50,text="Delete",corner_radius=1,command
 delete_btn.grid(padx=0,pady=10,row=1,column=1)
 
 
+
 root.mainloop()
 
 
