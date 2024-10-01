@@ -6,9 +6,14 @@ class node:
         self.data=val
         self.left:node=left
         self.right:node=right
+        self.button=CTkButton(root,text=val,corner_radius=10,fg_color="green")
+        self.high=1
     def insert(self,data):
         parent:node=self
         temp:node=self
+        if(temp==None):
+            temp=node(data)
+            return -1
         while(temp!=None):
             if(data>temp.data):
                 parent=temp
@@ -20,6 +25,23 @@ class node:
             parent.right=node(data)
         elif(data  < parent.data):
             parent.left=node(data)
+        #find height
+        if(parent.left==None):
+            h1=0
+        else:
+            h1=parent.left.high
+        if(parent.right==None):
+            h2=0
+        else:
+            h2=parent.right.high
+        parent.high=1+max(h1,h2)
+
+    def height(self,parent):
+        parent:node=self
+        if(parent==None):
+            return 0
+        else:
+            return 1+max(parent.left.high,parent.right.high)
     def delete(self,key):
         temp:node=self
         parent:node=temp
@@ -80,9 +102,12 @@ class node:
         self.postorder(temp.left)
         self.postorder(temp.right)
         print(f"{temp.data}",end=", ")
-        
 
-root_node=None
+def draw_tree():
+    ...        
+
+root_node:node=node(-100)
+
 set_appearance_mode("dark")
 root=CTk()
 root.geometry("800x500")
@@ -100,9 +125,18 @@ buttons_grid.pack(padx=10,pady=10)
 
 insert_entry=CTkEntry(buttons_grid,placeholder_text="value to be inserted",corner_radius=1,border_color="black",border_width=0,width=150)
 insert_entry.grid(padx=0,pady=10,row=0,column=0)
-
+# start=0
 def insert_callback():
-    pass
+    e=int(insert_entry.get())
+    if(root_node.data==-100):
+        root_node.data=e
+    else:
+        root_node.insert(e)
+    print(f"preorder: {root_node.preorder(root_node)}")
+    print(f"inorder: {root_node.inorder(root_node)}")
+    print(f"postorder: {root_node.postorder(root_node)}")
+    print("-------------------------------------")
+    draw_tree()
 insert_btn=CTkButton(buttons_grid,width=50,text="Insert",corner_radius=1,command=insert_callback)
 insert_btn.grid(padx=0,pady=10,row=0,column=1)
 
@@ -117,5 +151,3 @@ delete_btn.grid(padx=0,pady=10,row=1,column=1)
 
 
 root.mainloop()
-
-
