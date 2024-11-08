@@ -106,12 +106,13 @@ class node:
 def draw_tree():
     ...        
 
-root_node:node=node(-100)
+
 
 set_appearance_mode("dark")
 root=CTk()
 root.geometry("800x500")
 root.title("Tree Visualiser")
+root_node:node=node(-100)
 
 buttons_frame=CTkFrame(root,corner_radius=1,border_color="black",border_width=1)
 buttons_frame.pack(side=LEFT,fill="y",padx=0,pady=0)
