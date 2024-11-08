@@ -3,7 +3,11 @@ from tkinter import *
 from PIL import Image,ImageTk
 import pywinstyles
 import pyglet
-
+from matplotlib import pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+import torch
+# from utils import plotting
 
 set_appearance_mode("dark")
 set_default_color_theme("green")
@@ -56,6 +60,13 @@ class Inputs:
 insert_input=Inputs("Insert",0)
 delete_input=Inputs("Delete",2)
 
-
-
+#creating the canvas
+fig=Figure(figsize=(10,10),dpi=100)
+x=torch.arange(1,100,0.1)
+y=torch.sin(x)
+fig.add_subplot(111).plot(x,y)
+# plt.show()
+canvas=FigureCanvasTkAgg(fig,master=canvasFrame)
+canvas.draw()
+canvas.get_tk_widget().pack(fill="both",expand=True)
 root.mainloop()
