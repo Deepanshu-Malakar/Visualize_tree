@@ -8,11 +8,14 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 import networkx as nx
 from utils import colors
+from Trees import binarySearchTree as BST
+
 
 header_color=colors.blue
 side_frame_color=colors.white
 bottom_frame_color=colors.brown
 bottom_button_color=colors.dark_brown
+hover_color=colors.green
 set_appearance_mode("dark")
 set_default_color_theme("green")
 
@@ -37,11 +40,12 @@ titleLabel=CTkLabel(root,image=titleImg,text="Welcome to Tree Visualizer",compou
 pywinstyles.set_opacity(titleLabel,0.9)
 titleLabel.pack(padx=0,pady=0,fill="x")
 
-canvasFrame=CTkScrollableFrame(root,fg_color="white",corner_radius=0,border_color="black",border_width=0)
+canvasFrame=CTkFrame(root,fg_color="white",corner_radius=0,border_color="black",border_width=0)
 sideFrame=CTkFrame(root,corner_radius=0,fg_color=side_frame_color)
 bottomFrame=CTkFrame(root,fg_color=bottom_frame_color,corner_radius=0)
 pywinstyles.set_opacity(sideFrame,0.9)
 pywinstyles.set_opacity(bottomFrame,0.8)
+
 
 
 bottomFrame.pack(side=BOTTOM,padx=0,pady=0,fill="x")
@@ -55,7 +59,7 @@ class Inputs:
         self.frame=CTkFrame(sideFrame,fg_color="transparent")
         self.entry=CTkEntry(self.frame,width=200,fg_color="white",placeholder_text=f"Enter value to {job} ",corner_radius=0,border_width=1,border_color=header_color,font=("Sansation",12),text_color="Black")
         self.label=CTkLabel(self.frame,text=f"{job}",font=("Sansation",12,"bold"),text_color=header_color,justify="left")
-        self.button=CTkButton(self.frame,text="",image=self.image,compound=LEFT,width=50,corner_radius=0,fg_color=header_color)
+        self.button=CTkButton(self.frame,text="",image=self.image,compound=LEFT,width=50,corner_radius=0,fg_color=header_color,hover_color=hover_color,command=self.click)
 
         self.label.grid(row=0,column=0)
         self.frame.grid(row=r,column=0,padx=10,pady=10)
@@ -65,6 +69,8 @@ class Inputs:
         pywinstyles.set_opacity(self.label,1)
         pywinstyles.set_opacity(self.entry,1)
         # pywinstyles.set_opacity(self.image,1)
+    def click(self):
+        pass
 
 insert_input=Inputs("Insert",0)
 delete_input=Inputs("Delete",2)
@@ -107,8 +113,10 @@ selectTraversalLabel.grid(row=0,column=0,columnspan=3)
 
 class FooterButton:
     def __init__(self,name:str,c,frame=""):
-        self.button=CTkButton(frame,text=name,font=sansation,corner_radius=0,fg_color=bottom_button_color,width=150,height=50)
+        self.button=CTkButton(frame,text=name,font=sansation,corner_radius=0,fg_color=bottom_button_color,width=150,height=50,hover_color=hover_color,command=self.click)
         self.button.grid(row=1,column=c)
+    def click(self):
+        pass
 
 BinaryTreeBtn=FooterButton("Binary Tree",0,tree_type_frame)
 BinarySearchTreeBtn=FooterButton("Binary Search Tree",1,tree_type_frame)
@@ -117,4 +125,112 @@ RedBlackTreeBtn=FooterButton("Red Black Tree",3,tree_type_frame)
 PreorderBtn=FooterButton("Pre-order",0,tree_traversal_frame)
 InorderBtn=FooterButton("In-order",1,tree_traversal_frame)
 PostorderBtn=FooterButton("Post-order",2,tree_traversal_frame)
+
+
+
+#functions...................
+def resetAllTreeButtons():
+    BinaryTreeBtn.button.configure(fg_color=bottom_button_color)
+    BinarySearchTreeBtn.button.configure(fg_color=bottom_button_color)
+    AvlTreeBtn.button.configure(fg_color=bottom_button_color)
+    RedBlackTreeBtn.button.configure(fg_color=bottom_button_color)
+
+def delete_canvas_frame():
+    try:
+        canvasFrame.destroy()
+    except:
+        pass
+
+def BinarySearchTreeBtn_Callback():
+    delete_canvas_frame()
+    global canvasFrame
+    canvasFrame=CTkFrame(root,fg_color="white",corner_radius=0,border_color="black",border_width=0)
+    canvasFrame.pack(padx=0,pady=0,fill="both",expand=True)
+    resetAllTreeButtons()
+    BinarySearchTreeBtn.button.configure(fg_color=bottom_frame_color)
+    global tree_choice
+    tree_choice=2
+    BST.root=None
+    global G
+    G=nx.DiGraph()
+    global fig
+    global a
+    fig=Figure(figsize=(5,5))
+    a=fig.add_subplot(111)
+    global canvas
+    canvas=FigureCanvasTkAgg(fig,master=canvasFrame)
+    canvas.draw()
+    canvas.get_tk_widget().pack(fill="both",expand=True)
+
+
+def BinaryTreeBtn_Callback():
+    delete_canvas_frame()
+    global canvasFrame
+    canvasFrame=CTkFrame(root,fg_color="white",corner_radius=0,border_color="black",border_width=0)
+    canvasFrame.pack(padx=0,pady=0,fill="both",expand=True)
+    resetAllTreeButtons()
+    BinaryTreeBtn.button.configure(fg_color=bottom_frame_color)
+    global tree_choice
+    tree_choice=1
+
+
+def AvlTreeBtn_Callback():
+    delete_canvas_frame()
+    global canvasFrame
+    canvasFrame=CTkFrame(root,fg_color="white",corner_radius=0,border_color="black",border_width=0)
+    canvasFrame.pack(padx=0,pady=0,fill="both",expand=True)
+    resetAllTreeButtons()
+    AvlTreeBtn.button.configure(fg_color=bottom_frame_color)
+    global tree_choice
+    tree_choice=3
+
+def RedBlackTreeBtn_Callback():
+    delete_canvas_frame()
+    global canvasFrame
+    canvasFrame=CTkScrollableFrame(root,fg_color="white",corner_radius=0,border_color="black",border_width=0)
+    canvasFrame.pack(padx=0,pady=0,fill="both",expand=True)
+    resetAllTreeButtons()
+    RedBlackTreeBtn.button.configure(fg_color=bottom_frame_color)
+    global tree_choice
+    tree_choice=4
+
+BinarySearchTreeBtn.button.configure(command=BinarySearchTreeBtn_Callback)
+BinaryTreeBtn.button.configure(command=BinaryTreeBtn_Callback)
+AvlTreeBtn.button.configure(command=AvlTreeBtn_Callback)
+RedBlackTreeBtn.button.configure(command=RedBlackTreeBtn_Callback)
+
+#insert and delete functions
+tree_choice=0
+"""
+treeChoice=1   Binary Tree
+treeChoice=2   Binary Search Tree
+treeChoice=3   Avl Tree
+treeChoice=4   Red Black Tree
+
+"""
+
+def insert_button_callback():
+    key=int(insert_input.entry.get())
+    if(tree_choice==2):
+        BST.root=BST.insert(BST.root,key)
+        BST.inorder(BST.root)
+        print("")
+        pos={}
+        def add_edges(node:BST.Treenode,x:int,y:int,dx):
+            if node is not None:
+                pos[node.data]=(x,y)
+                if node.left:
+                    G.add_edge(node.data,node.left.data)
+                    add_edges(node.left,x-dx,y-1,dx/2)
+                if node.right:
+                    G.add_edge(node.data,node.right.data)
+                    add_edges(node.right,x+dx,y-1,dx/2)
+        add_edges(BST.root,0,0,4)
+        nx.draw(G,with_labels=True,pos=pos,node_color="skyblue",ax=a)
+        canvas.draw()
+
+
+insert_input.button.configure(command=insert_button_callback)
+
+
 root.mainloop()
